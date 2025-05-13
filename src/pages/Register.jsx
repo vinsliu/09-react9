@@ -1,5 +1,14 @@
 import { useState } from "react";
-import { Form, Button, Container, Card, Row, Col } from "react-bootstrap";
+import {
+  Form,
+  Button,
+  Container,
+  Card,
+  Row,
+  Col,
+  Alert,
+} from "react-bootstrap";
+import { useNavigate } from "react-router";
 
 const Register = () => {
   const [formData, setFormData] = useState({
@@ -8,6 +17,10 @@ const Register = () => {
     password: "",
   });
 
+  const [error, setError] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const navigate = useNavigate();
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -15,11 +28,31 @@ const Register = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // Handle signup logic here
     // Don't forget to handle errors, both for yourself (dev) and for the client (via a Bootstrap Alert)
     // Redirect to Login on success
+    try {
+      const response = await fetch(
+        "https://offers-api.digistos.com/api/auth/register",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP ${response.status}.`);
+      }
+      setSuccess(true);
+      setTimeout(() => {
+        navigate("/connexion");
+      }, 2000);
+    } catch (e) {
+      console.log(e.message);
+      setError(true);
+    }
     console.log("Form submitted:", formData);
   };
 
@@ -27,6 +60,17 @@ const Register = () => {
     <Container className="d-flex justify-content-center align-items-center min-vh-100">
       <Row className="w-100 justify-content-center">
         <Col xs={12} sm={8} md={6} lg={4}>
+          {error && (
+            <Alert variant="danger">
+              Une erreur est survenue lors de votre inscription, veuillez
+              ressayer.
+            </Alert>
+          )}
+          {success && (
+            <Alert variant="success">
+              Inscription réussi, redirection en cours...
+            </Alert>
+          )}
           <Card className="p-4 shadow-lg">
             <h2 className="text-center mb-4">Créer un compte</h2>
             <Form onSubmit={handleSubmit}>
