@@ -48,9 +48,7 @@ const Register = () => {
         const data = await response.json();
         throw { status: response.status, message: data.message };
       }
-      () => {
-        navigate("/connexion");
-      };
+      navigate("/connexion");
     } catch (e) {
       console.log(`Error: ${e.message} (${e.status})`);
       setError(
