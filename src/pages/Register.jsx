@@ -18,7 +18,6 @@ const Register = () => {
   });
 
   const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -49,10 +48,9 @@ const Register = () => {
         const data = await response.json();
         throw { status: response.status, message: data.message };
       }
-      setSuccess("Inscription réussi, redirection en cours...");
-      setTimeout(() => {
+      () => {
         navigate("/connexion");
-      }, 2000);
+      };
     } catch (e) {
       console.log(`Error: ${e.message} (${e.status})`);
       setError(
@@ -69,11 +67,6 @@ const Register = () => {
           {error && (
             <Alert variant="danger" className="text-center">
               {error}
-            </Alert>
-          )}
-          {success && (
-            <Alert variant="success" className="text-center">
-              {success}
             </Alert>
           )}
           <Card className="p-4 shadow-lg">

@@ -56,9 +56,13 @@ const LoginPage = () => {
       }, 2000);
     } catch (e) {
       console.log(`Error: ${e.message} (${e.status})`);
-      setError(
-        "Une erreur est survenue lors de votre connexion, veuillez ressayer."
-      );
+      if (e.status === 401) {
+        setError(`${e.message}`);
+      } else {
+        setError(
+          "Une erreur est survenue lors de votre connexion, veuillez ressayer."
+        );
+      }
     }
     console.log("Login submitted:", formData);
   };
