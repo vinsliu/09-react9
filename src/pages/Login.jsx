@@ -47,7 +47,11 @@ const LoginPage = () => {
       );
       if (!response.ok) {
         const data = await response.json();
-        throw { status: response.status, message: data.message };
+        const err = new Error(
+          data.message || "Une erreur est survenue lors de la connexion."
+        );
+        err.status = response.status;
+        throw err;
       }
       navigate("/offres/professionnelles");
     } catch (e) {
