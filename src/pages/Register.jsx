@@ -38,20 +38,26 @@ const Register = () => {
         "https://offers-api.digistos.com/api/auth/register",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
           body: JSON.stringify(formData),
         }
       );
       if (!response.ok) {
-        throw new Error(`Erreur HTTP ${response.status}.`);
+        const data = await response.json();
+        throw { status: response.status, message: data.message };
       }
-      setSuccess(true);
+      setSuccess("Inscription réussi, redirection en cours...");
       setTimeout(() => {
         navigate("/connexion");
       }, 2000);
     } catch (e) {
-      console.log(e.message);
-      setError(true);
+      console.log(`Error: ${e.message} (${e.status})`);
+      setError(
+        "Une erreur est survenue lors de votre inscription, veuillez ressayer."
+      );
     }
     console.log("Form submitted:", formData);
   };
@@ -61,14 +67,13 @@ const Register = () => {
       <Row className="w-100 justify-content-center">
         <Col xs={12} sm={8} md={6} lg={4}>
           {error && (
-            <Alert variant="danger">
-              Une erreur est survenue lors de votre inscription, veuillez
-              ressayer.
+            <Alert variant="danger" className="text-center">
+              {error}
             </Alert>
           )}
           {success && (
-            <Alert variant="success">
-              Inscription réussi, redirection en cours...
+            <Alert variant="success" className="text-center">
+              {success}
             </Alert>
           )}
           <Card className="p-4 shadow-lg">
