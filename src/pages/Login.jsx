@@ -45,14 +45,24 @@ const LoginPage = () => {
           body: JSON.stringify(formData),
         }
       );
+      const data = await response.json();
       if (!response.ok) {
-        const data = await response.json();
         const err = new Error(
           data.message || "Une erreur est survenue lors de la connexion."
         );
         err.status = response.status;
         throw err;
       }
+      console.log("Data access token : " + data.access_token);
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          token: data.access_token,
+          expiresAt: new Date(
+            Date.now() + data.expires_in * 1000
+          ).toISOString(),
+        })
+      );
       navigate("/offres/professionnelles");
     } catch (e) {
       console.log(`Error: ${e.message} (${e.status})`);
