@@ -17,7 +17,6 @@ const LoginPage = () => {
   });
 
   const [error, setError] = useState(false);
-  const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -50,14 +49,11 @@ const LoginPage = () => {
         const data = await response.json();
         throw { status: response.status, message: data.message };
       }
-      setSuccess("Connexion réussi, redirection en cours...");
-      setTimeout(() => {
-        navigate("/offres/professionnelles");
-      }, 2000);
+      navigate("/offres/professionnelles");
     } catch (e) {
       console.log(`Error: ${e.message} (${e.status})`);
       if (e.status === 401) {
-        setError(`${e.message}`);
+        setError("Email ou mot de passe incorrect");
       } else {
         setError(
           "Une erreur est survenue lors de votre connexion, veuillez ressayer."
@@ -74,11 +70,6 @@ const LoginPage = () => {
           {error && (
             <Alert variant="danger" className="text-center">
               {error}
-            </Alert>
-          )}
-          {success && (
-            <Alert variant="success" className="text-center">
-              {success}
             </Alert>
           )}
           <Card className="p-4 shadow-lg">

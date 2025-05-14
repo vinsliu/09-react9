@@ -46,7 +46,11 @@ const Register = () => {
       );
       if (!response.ok) {
         const data = await response.json();
-        throw { status: response.status, message: data.message };
+        const err = new Error(
+          data.message || "Une erreur est survenue lors de l'inscription."
+        );
+        err.status = response.status;
+        throw err;
       }
       navigate("/connexion");
     } catch (e) {
