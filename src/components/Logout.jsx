@@ -25,7 +25,7 @@ const Logout = () => {
     };
 
     handleLogout();
-  }, [token, dispatch, navigate]);
+  }, [token, navigate]);
 
   return null; // Pas besoin d'afficher quoi que ce soit
 };
