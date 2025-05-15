@@ -43,16 +43,25 @@ const LoginPage = () => {
             Accept: "application/json",
           },
           body: JSON.stringify(formData),
+          credentials: "include",
         }
       );
+      const data = await response.json();
       if (!response.ok) {
-        const data = await response.json();
         const err = new Error(
           data.message || "Une erreur est survenue lors de la connexion."
         );
         err.status = response.status;
         throw err;
       }
+      localStorage.setItem(
+        "auth",
+        JSON.stringify({
+          expiresAt: new Date(
+            Date.now() + data.expires_in * 1000
+          ).toISOString(),
+        })
+      );
       navigate("/offres/professionnelles");
     } catch (e) {
       console.log(`Error: ${e.message} (${e.status})`);
