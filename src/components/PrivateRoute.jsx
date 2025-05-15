@@ -15,7 +15,7 @@ const PrivateRoute = () => {
       navigate("/connexion");
       return;
     }
-  }, [auth, navigate, dispatch]);
+  }, [auth, dispatch, navigate]);
   return <Outlet />;
 };
 
