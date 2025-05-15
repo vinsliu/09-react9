@@ -8,7 +8,9 @@ import {
   Col,
   Alert,
 } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router";
+import { loginSuccess } from "../store/authSlice";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -17,6 +19,7 @@ const LoginPage = () => {
   });
 
   const [error, setError] = useState(false);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -45,14 +48,22 @@ const LoginPage = () => {
           body: JSON.stringify(formData),
         }
       );
+      const data = await response.json();
       if (!response.ok) {
-        const data = await response.json();
         const err = new Error(
           data.message || "Une erreur est survenue lors de la connexion."
         );
         err.status = response.status;
         throw err;
       }
+      dispatch(
+        loginSuccess({
+          token: data.access_token,
+          expiresAt: new Date(
+            Date.now() + data.expires_in * 1000
+          ).toISOString(),
+        })
+      );
       navigate("/offres/professionnelles");
     } catch (e) {
       console.log(`Error: ${e.message} (${e.status})`);

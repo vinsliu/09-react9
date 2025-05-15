@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { Spinner, Alert } from "react-bootstrap";
 import OfferList from "../components/OfferList.jsx";
+import { useSelector } from "react-redux";
 
 const OfferProList = () => {
   const [offers, setOffers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const token = useSelector((state) => state.auth.token);
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -16,6 +18,7 @@ const OfferProList = () => {
             headers: {
               Accept: "application/json",
               // Add Authorization token
+              Authorization: `Bearer ${token}`,
             },
           }
         );
@@ -39,7 +42,7 @@ const OfferProList = () => {
     };
 
     fetchProducts();
-  }, []);
+  }, [token]);
 
   if (loading) {
     return <Spinner animation="border" className="d-block mx-auto mt-5" />;
